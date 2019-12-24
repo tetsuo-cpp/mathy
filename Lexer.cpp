@@ -4,9 +4,7 @@
 
 namespace mathy {
 
-Lexer::Lexer(const std::string &source) : source(source), pos(0), curChar(0) {
-  readChar();
-}
+Lexer::Lexer(const std::string &source) : source(source), pos(0) { readChar(); }
 
 Token Lexer::lex() {
   trimWhitespace();

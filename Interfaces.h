@@ -53,13 +53,14 @@ struct Token {
   Token(TokenKind kind, T &&value)
       : kind(kind), value(std::forward<T>(value)) {}
   explicit operator bool() const { return (kind != TokenKind::EndOfFile); }
-  template <typename T> friend T &operator<<(T &stream, const Token &tok) {
-    stream << "{ Kind = " << tokenKindToString(tok.kind) << ", Value = \""
-           << tok.value << "\" }";
-    return stream;
-  };
   TokenKind kind;
   const std::string value;
+};
+
+template <typename T> T &operator<<(T &stream, const Token &tok) {
+  stream << "{ Kind = " << tokenKindToString(tok.kind) << ", Value = \""
+         << tok.value << "\" }";
+  return stream;
 };
 
 class IAst {

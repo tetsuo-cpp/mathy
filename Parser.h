@@ -12,7 +12,13 @@ public:
   std::unique_ptr<IAst> parse() override;
 
 private:
+  std::unique_ptr<IAst> parseVar();
+  std::unique_ptr<IAst> parseExpr();
+  void readToken();
+  bool checkToken(TokenKind);
+  void expectToken(TokenKind);
   ILexer &lexer;
+  Token curTok;
 };
 
 } // namespace mathy

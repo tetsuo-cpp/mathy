@@ -52,9 +52,9 @@ struct Token {
   template <typename T>
   Token(TokenKind kind, T &&value)
       : kind(kind), value(std::forward<T>(value)) {}
-  explicit operator bool() const { return (kind != TokenKind::EndOfFile); }
+  operator bool() const { return kind != TokenKind::EndOfFile; }
   TokenKind kind;
-  const std::string value;
+  std::string value;
 };
 
 template <typename T> T &operator<<(T &stream, const Token &tok) {
@@ -63,8 +63,7 @@ template <typename T> T &operator<<(T &stream, const Token &tok) {
   return stream;
 };
 
-class IAst {
-public:
+struct IAst {
   virtual ~IAst() = default;
 };
 
@@ -79,6 +78,13 @@ class ILexer {
 public:
   virtual ~ILexer() = default;
   virtual Token lex() = 0;
+};
+
+class ParserError : public std::runtime_error {
+public:
+  template <typename T>
+  ParserError(T &&msg) : std::runtime_error(std::forward<T>(msg)) {}
+  virtual ~ParserError() = default;
 };
 
 class IParser {

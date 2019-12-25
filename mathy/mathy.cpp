@@ -1,5 +1,5 @@
-#include "Interfaces.h"
-#include "Lexer.h"
+#include <Interfaces.h>
+#include <Lexer.h>
 
 #include <iostream>
 #include <vector>

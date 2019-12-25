@@ -5,11 +5,5 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 
-set(
-  MATHY_SOURCE_FILES
-  Lexer.cpp
-  Parser.cpp
-  main.cpp
-  )
-
-add_executable(mathy ${MATHY_SOURCE_FILES})
+add_subdirectory(lib)
+add_subdirectory(mathy)

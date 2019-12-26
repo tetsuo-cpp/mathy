@@ -65,9 +65,11 @@ Token Lexer::lexSymbol() {
     return Token(TokenKind::OpenParen);
   case ')':
     return Token(TokenKind::CloseParen);
+  case '=':
+    return Token(TokenKind::Assignment);
   default: {
     std::stringstream ss;
-    ss << "Unrecognised symbol: \"" << curChar << "\"";
+    ss << "Unrecognised symbol: \"" << prevChar << "\"";
     throw LexerError(ss.str());
   }
   }

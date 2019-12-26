@@ -20,7 +20,7 @@ std::unique_ptr<IAst> Parser::parse() {
 
 std::unique_ptr<IAst> Parser::parseVar() {
   // Parsing form: var x = 1 + 2.
-  std::string identifier = curTok.value;
+  auto identifier = curTok.value;
   expectToken(TokenKind::Identifier);
   expectToken(TokenKind::Assignment);
   return std::make_unique<VarDecl>(std::move(identifier), parseExpr());

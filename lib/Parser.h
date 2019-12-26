@@ -6,7 +6,7 @@ namespace mathy {
 
 class Parser : public IParser {
 public:
-  Parser(ILexer &lexer);
+  explicit Parser(ILexer &lexer);
   virtual ~Parser() = default;
   // IParser impl.
   std::unique_ptr<IAst> parse() override;

@@ -14,6 +14,9 @@ public:
 private:
   std::unique_ptr<IAst> parseVar();
   std::unique_ptr<IAst> parseExpr();
+  std::unique_ptr<IAst> parseAddition();
+  std::unique_ptr<IAst> parseMultiplication();
+  std::unique_ptr<IAst> parsePrimaryExpr();
   void readToken();
   bool checkToken(TokenKind);
   void expectToken(TokenKind);

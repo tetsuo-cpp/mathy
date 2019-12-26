@@ -26,7 +26,39 @@ std::unique_ptr<IAst> Parser::parseVar() {
   return std::make_unique<VarDecl>(std::move(identifier), parseExpr());
 }
 
-std::unique_ptr<IAst> Parser::parseExpr() { return nullptr; }
+std::unique_ptr<IAst> Parser::parseExpr() { return parseAddition(); }
+
+std::unique_ptr<IAst> Parser::parseAddition() {
+  auto lhs = parseMultiplication();
+  for (;;) {
+    auto prevTok = curTok;
+    if (checkToken(TokenKind::Addition) || checkToken(TokenKind::Subtraction))
+      lhs = std::make_unique<BinOp>(curTok.value.front(), std::move(lhs),
+                                    parseMultiplication());
+    else
+      return lhs;
+  }
+}
+
+std::unique_ptr<IAst> Parser::parseMultiplication() {
+  auto lhs = parsePrimaryExpr();
+  for (;;) {
+    auto prevTok = curTok;
+    if (checkToken(TokenKind::Multiplication) ||
+        checkToken(TokenKind::Division))
+      lhs = std::make_unique<BinOp>(curTok.value.front(), std::move(lhs),
+                                    parsePrimaryExpr());
+    else
+      return lhs;
+  }
+}
+
+std::unique_ptr<IAst> Parser::parsePrimaryExpr() {
+  const auto prevTok = curTok;
+  expectToken(TokenKind::Number);
+  const int intValue = std::stoi(prevTok.value);
+  return std::make_unique<Number>(intValue);
+}
 
 void Parser::readToken() { curTok = lexer.lex(); }
 

@@ -1,6 +1,7 @@
 set(
   MATHY_TEST_FILES
   LexerTest.cpp
+  ParserTest.cpp
   mathy_test.cpp
   )
 

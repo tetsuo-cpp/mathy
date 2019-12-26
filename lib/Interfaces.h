@@ -53,6 +53,9 @@ struct Token {
   Token(TokenKind kind, T &&value)
       : kind(kind), value(std::forward<T>(value)) {}
   operator bool() const { return kind != TokenKind::EndOfFile; }
+  bool operator==(const Token &rhs) const {
+    return kind == rhs.kind && value == rhs.value;
+  }
   TokenKind kind;
   std::string value;
 };

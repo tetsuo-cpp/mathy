@@ -71,6 +71,7 @@ class IAstVisitor;
 struct IAst {
   virtual ~IAst() = default;
   virtual void accept(IAstVisitor &) = 0;
+  std::optional<int> value;
 };
 
 class LexerError : public std::runtime_error {
@@ -99,10 +100,17 @@ public:
   virtual std::unique_ptr<IAst> parse() = 0;
 };
 
+class EngineError : public std::runtime_error {
+public:
+  template <typename T>
+  EngineError(T &&msg) : std::runtime_error(std::forward<T>(msg)) {}
+  virtual ~EngineError() = default;
+};
+
 class IEngine {
 public:
   virtual ~IEngine() = default;
-  virtual std::optional<int> eval() = 0;
+  virtual std::optional<int> eval(IAst &) = 0;
 };
 
 } // namespace mathy

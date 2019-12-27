@@ -1,5 +1,6 @@
 set(
   MATHY_FILES
+  Interpreter.cpp
   Lexer.cpp
   Parser.cpp
   )

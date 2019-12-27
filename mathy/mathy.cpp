@@ -18,7 +18,10 @@ int main(int, char **) {
     mathy::Lexer lexer(line);
     mathy::Parser parser(lexer);
     try {
-      const auto value = interpreter.eval(*parser.parse());
+      std::optional<int> value;
+      const auto ast = parser.parse();
+      if (ast)
+        value = interpreter.eval(*ast);
       if (value)
         std::cout << *value << "\n";
       else

@@ -55,9 +55,12 @@ std::unique_ptr<IAst> Parser::parseMultiplication() {
 
 std::unique_ptr<IAst> Parser::parsePrimaryExpr() {
   const auto prevTok = curTok;
-  expectToken(TokenKind::Number);
-  const int intValue = std::stoi(prevTok.value);
-  return std::make_unique<Number>(intValue);
+  if (checkToken(TokenKind::Number)) {
+    const int intValue = std::stoi(prevTok.value);
+    return std::make_unique<Number>(intValue);
+  }
+  expectToken(TokenKind::Identifier);
+  return std::make_unique<VarRef>(prevTok.value);
 }
 
 void Parser::readToken() { curTok = lexer.lex(); }

@@ -36,12 +36,21 @@ struct Number : public IAst {
   const int value;
 };
 
+struct VarRef : public IAst {
+  explicit VarRef(const std::string &name) : name(name) {}
+  virtual ~VarRef() = default;
+  // IAst impl.
+  void accept(IAstVisitor &) override;
+  const std::string name;
+};
+
 class IAstVisitor {
 public:
   virtual ~IAstVisitor() = default;
   virtual void visit(VarDecl &) = 0;
   virtual void visit(BinOp &) = 0;
   virtual void visit(Number &) = 0;
+  virtual void visit(VarRef &) = 0;
 };
 
 inline void VarDecl::accept(IAstVisitor &visitor) { visitor.visit(*this); }
@@ -49,5 +58,7 @@ inline void VarDecl::accept(IAstVisitor &visitor) { visitor.visit(*this); }
 inline void BinOp::accept(IAstVisitor &visitor) { visitor.visit(*this); }
 
 inline void Number::accept(IAstVisitor &visitor) { visitor.visit(*this); }
+
+inline void VarRef::accept(IAstVisitor &visitor) { visitor.visit(*this); }
 
 } // namespace mathy

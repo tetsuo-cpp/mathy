@@ -11,7 +11,7 @@ std::optional<int> Interpreter::eval(IAst &node) {
 void Interpreter::visit(VarDecl &varDecl) {
   varDecl.rhs->accept(*this);
   assert(varDecl.rhs->value);
-  bindings[varDecl.name] = varDecl.rhs->value;
+  bindings[varDecl.name] = *varDecl.rhs->value;
 }
 
 void Interpreter::visit(BinOp &binOp) {

@@ -19,7 +19,7 @@ private:
   void visit(BinOp &) override;
   void visit(Number &) override;
   void visit(VarRef &) override;
-  std::unordered_map<std::string, std::optional<int>> bindings;
+  std::unordered_map<std::string, int> bindings;
 };
 
 } // namespace mathy

@@ -1,4 +1,5 @@
 #include <Ast.h>
+#include <Lexer.h>
 #include <Parser.h>
 
 #include <catch2/catch.hpp>
@@ -65,14 +66,54 @@ void testWithScriptedLexer(std::vector<Token> &&tokens, const IAst &expected) {
   compare(*parser.parse(), expected);
 }
 
+void testWithLexer(const std::string &source, const IAst &expected) {
+  Lexer lexer(source);
+  Parser parser(lexer);
+  compare(*parser.parse(), expected);
+}
+
+void testParser(const std::string &source, std::vector<Token> &&scriptedTokens,
+                const IAst &expected) {
+  testWithScriptedLexer(std::move(scriptedTokens), expected);
+  testWithLexer(source, expected);
+}
+
 } // namespace
 
 TEST_CASE("parser handles addition") {
-  testWithScriptedLexer(
-      {Token(TokenKind::Number, "1"), Token(TokenKind::Addition),
-       Token(TokenKind::Number, "2")},
-      *std::make_unique<BinOp>(TokenKind::Addition, std::make_unique<Number>(1),
-                               std::make_unique<Number>(2)));
+  testParser("1 + 2",
+             {Token(TokenKind::Number, "1"), Token(TokenKind::Addition),
+              Token(TokenKind::Number, "2")},
+             *std::make_unique<BinOp>(TokenKind::Addition,
+                                      std::make_unique<Number>(1),
+                                      std::make_unique<Number>(2)));
+}
+
+TEST_CASE("parser handles subtraction") {
+  testParser("8 - 1",
+             {Token(TokenKind::Number, "8"), Token(TokenKind::Subtraction),
+              Token(TokenKind::Number, "1")},
+             *std::make_unique<BinOp>(TokenKind::Subtraction,
+                                      std::make_unique<Number>(8),
+                                      std::make_unique<Number>(1)));
+}
+
+TEST_CASE("parser handles multiplication") {
+  testParser("2 * 5",
+             {Token(TokenKind::Number, "2"), Token(TokenKind::Multiplication),
+              Token(TokenKind::Number, "5")},
+             *std::make_unique<BinOp>(TokenKind::Multiplication,
+                                      std::make_unique<Number>(2),
+                                      std::make_unique<Number>(5)));
+}
+
+TEST_CASE("parser handles division") {
+  testParser("6 / 3",
+             {Token(TokenKind::Number, "6"), Token(TokenKind::Division),
+              Token(TokenKind::Number, "3")},
+             *std::make_unique<BinOp>(TokenKind::Division,
+                                      std::make_unique<Number>(6),
+                                      std::make_unique<Number>(3)));
 }
 
 } // namespace mathy::test

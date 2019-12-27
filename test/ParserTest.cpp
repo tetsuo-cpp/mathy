@@ -59,18 +59,20 @@ void compare(const IAst &lhs, const IAst &rhs) {
   REQUIRE(false);
 }
 
-std::unique_ptr<IAst> createBinOp(char op, int lhs, int rhs) {
-  return std::make_unique<BinOp>(op, std::make_unique<Number>(lhs),
-                                 std::make_unique<Number>(rhs));
+void testWithScriptedLexer(std::vector<Token> &&tokens, const IAst &expected) {
+  ScriptedLexer lexer(std::move(tokens));
+  Parser parser(lexer);
+  compare(*parser.parse(), expected);
 }
 
 } // namespace
 
 TEST_CASE("parser handles addition") {
-  auto var = createBinOp('+', 1, 2);
-  static_cast<void>(var);
-  compare(Number(1), Number(1));
-  compare(*var, Number(1));
+  testWithScriptedLexer(
+      {Token(TokenKind::Number, "1"), Token(TokenKind::Addition),
+       Token(TokenKind::Number, "2")},
+      *std::make_unique<BinOp>(TokenKind::Addition, std::make_unique<Number>(1),
+                               std::make_unique<Number>(2)));
 }
 
 } // namespace mathy::test

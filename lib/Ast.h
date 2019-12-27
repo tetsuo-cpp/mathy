@@ -18,12 +18,12 @@ struct VarDecl : public IAst {
 };
 
 struct BinOp : public IAst {
-  BinOp(char op, std::unique_ptr<IAst> lhs, std::unique_ptr<IAst> rhs)
+  BinOp(TokenKind op, std::unique_ptr<IAst> lhs, std::unique_ptr<IAst> rhs)
       : op(op), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
   virtual ~BinOp() = default;
   // IAst impl.
   void accept(IAstVisitor &) override;
-  const char op;
+  const TokenKind op;
   std::unique_ptr<IAst> lhs;
   std::unique_ptr<IAst> rhs;
 };
@@ -44,10 +44,10 @@ public:
   virtual void visit(Number &) = 0;
 };
 
-void VarDecl::accept(IAstVisitor &visitor) { visitor.visit(*this); }
+inline void VarDecl::accept(IAstVisitor &visitor) { visitor.visit(*this); }
 
-void BinOp::accept(IAstVisitor &visitor) { visitor.visit(*this); }
+inline void BinOp::accept(IAstVisitor &visitor) { visitor.visit(*this); }
 
-void Number::accept(IAstVisitor &visitor) { visitor.visit(*this); }
+inline void Number::accept(IAstVisitor &visitor) { visitor.visit(*this); }
 
 } // namespace mathy

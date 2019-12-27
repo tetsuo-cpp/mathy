@@ -33,7 +33,7 @@ std::unique_ptr<IAst> Parser::parseAddition() {
   for (;;) {
     const auto prevTok = curTok;
     if (checkToken(TokenKind::Addition) || checkToken(TokenKind::Subtraction))
-      lhs = std::make_unique<BinOp>(prevTok.value.front(), std::move(lhs),
+      lhs = std::make_unique<BinOp>(prevTok.kind, std::move(lhs),
                                     parseMultiplication());
     else
       return lhs;
@@ -46,7 +46,7 @@ std::unique_ptr<IAst> Parser::parseMultiplication() {
     const auto prevTok = curTok;
     if (checkToken(TokenKind::Multiplication) ||
         checkToken(TokenKind::Division))
-      lhs = std::make_unique<BinOp>(prevTok.value.front(), std::move(lhs),
+      lhs = std::make_unique<BinOp>(prevTok.kind, std::move(lhs),
                                     parsePrimaryExpr());
     else
       return lhs;

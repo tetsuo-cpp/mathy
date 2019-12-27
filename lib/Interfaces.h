@@ -66,8 +66,11 @@ template <typename T> T &operator<<(T &stream, const Token &tok) {
   return stream;
 };
 
+class IAstVisitor;
+
 struct IAst {
   virtual ~IAst() = default;
+  virtual void accept(IAstVisitor &) = 0;
 };
 
 class LexerError : public std::runtime_error {

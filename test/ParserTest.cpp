@@ -1,12 +1,15 @@
+#include <Ast.h>
 #include <Parser.h>
 
 #include <catch2/catch.hpp>
 
 namespace mathy::test {
 
+namespace {
+
 class ScriptedLexer : public ILexer {
 public:
-  ScriptedLexer(std::vector<Token> &&tokens)
+  explicit ScriptedLexer(std::vector<Token> &&tokens)
       : tokens(std::move(tokens)), pos(0) {}
   virtual ~ScriptedLexer() = default;
   // ILexer impl.
@@ -21,6 +24,13 @@ private:
   size_t pos;
 };
 
-TEST_CASE("parser test") { REQUIRE(true); }
+std::unique_ptr<IAst> createBinOp(char op, int lhs, int rhs) {
+  return std::make_unique<BinOp>(op, std::make_unique<Number>(lhs),
+                                 std::make_unique<Number>(rhs));
+}
+
+} // namespace
+
+TEST_CASE("parser handles addition") { REQUIRE(true); }
 
 } // namespace mathy::test

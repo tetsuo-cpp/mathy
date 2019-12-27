@@ -80,7 +80,7 @@ void testParser(const std::string &source, std::vector<Token> &&scriptedTokens,
 
 } // namespace
 
-TEST_CASE("parser handles addition") {
+TEST_CASE("parser handles addition", "[parser]") {
   testParser("1 + 2",
              {Token(TokenKind::Number, "1"), Token(TokenKind::Addition),
               Token(TokenKind::Number, "2")},
@@ -89,7 +89,7 @@ TEST_CASE("parser handles addition") {
                                       std::make_unique<Number>(2)));
 }
 
-TEST_CASE("parser handles subtraction") {
+TEST_CASE("parser handles subtraction", "[parser]") {
   testParser("8 - 1",
              {Token(TokenKind::Number, "8"), Token(TokenKind::Subtraction),
               Token(TokenKind::Number, "1")},
@@ -98,7 +98,7 @@ TEST_CASE("parser handles subtraction") {
                                       std::make_unique<Number>(1)));
 }
 
-TEST_CASE("parser handles multiplication") {
+TEST_CASE("parser handles multiplication", "[parser]") {
   testParser("2 * 5",
              {Token(TokenKind::Number, "2"), Token(TokenKind::Multiplication),
               Token(TokenKind::Number, "5")},
@@ -107,7 +107,7 @@ TEST_CASE("parser handles multiplication") {
                                       std::make_unique<Number>(5)));
 }
 
-TEST_CASE("parser handles division") {
+TEST_CASE("parser handles division", "[parser]") {
   testParser("6 / 3",
              {Token(TokenKind::Number, "6"), Token(TokenKind::Division),
               Token(TokenKind::Number, "3")},

@@ -116,4 +116,24 @@ TEST_CASE("parser handles division", "[parser]") {
                                       std::make_unique<Number>(3)));
 }
 
+TEST_CASE("parser handles precedence", "[parser]") {
+  testParser("3 + 2 * 1 / 2 + 3",
+             {Token(TokenKind::Number, "3"), Token(TokenKind::Addition),
+              Token(TokenKind::Number, "2"), Token(TokenKind::Multiplication),
+              Token(TokenKind::Number, "1"), Token(TokenKind::Division),
+              Token(TokenKind::Number, "2"), Token(TokenKind::Addition),
+              Token(TokenKind::Number, "3")},
+             *std::make_unique<BinOp>(
+                 TokenKind::Addition,
+                 std::make_unique<BinOp>(
+                     TokenKind::Addition, std::make_unique<Number>(3),
+                     std::make_unique<BinOp>(
+                         TokenKind::Division,
+                         std::make_unique<BinOp>(TokenKind::Multiplication,
+                                                 std::make_unique<Number>(2),
+                                                 std::make_unique<Number>(1)),
+                         std::make_unique<Number>(2))),
+                 std::make_unique<Number>(3)));
+}
+
 } // namespace mathy::test

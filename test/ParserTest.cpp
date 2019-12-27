@@ -136,4 +136,15 @@ TEST_CASE("parser handles precedence", "[parser]") {
                  std::make_unique<Number>(3)));
 }
 
+TEST_CASE("parser handles var decls", "[parser]") {
+  testParser("var foo = 1 + 2",
+             {Token(TokenKind::Var), Token(TokenKind::Identifier, "foo"),
+              Token(TokenKind::Assignment), Token(TokenKind::Number, "1"),
+              Token(TokenKind::Addition), Token(TokenKind::Number, "2")},
+             *std::make_unique<VarDecl>(
+                 "foo", std::make_unique<BinOp>(TokenKind::Addition,
+                                                std::make_unique<Number>(1),
+                                                std::make_unique<Number>(2))));
+}
+
 } // namespace mathy::test

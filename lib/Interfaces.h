@@ -90,7 +90,7 @@ public:
 class ParserError : public std::runtime_error {
 public:
   template <typename T>
-  ParserError(T &&msg) : std::runtime_error(std::forward<T>(msg)) {}
+  explicit ParserError(T &&msg) : std::runtime_error(std::forward<T>(msg)) {}
   virtual ~ParserError() = default;
 };
 
@@ -103,7 +103,7 @@ public:
 class EngineError : public std::runtime_error {
 public:
   template <typename T>
-  EngineError(T &&msg) : std::runtime_error(std::forward<T>(msg)) {}
+  explicit EngineError(T &&msg) : std::runtime_error(std::forward<T>(msg)) {}
   virtual ~EngineError() = default;
 };
 

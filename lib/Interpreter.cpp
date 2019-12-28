@@ -1,4 +1,5 @@
 #include "Interpreter.h"
+
 #include <sstream>
 
 namespace mathy {
@@ -19,7 +20,7 @@ void Interpreter::visit(BinOp &binOp) {
   assert(binOp.lhs->value);
   binOp.rhs->accept(*this);
   assert(binOp.rhs->value);
-  binOp.value = [&binOp]() -> std::optional<int> {
+  binOp.value = [&binOp]() -> int {
     switch (binOp.op) {
     case TokenKind::Addition:
       return *binOp.lhs->value + *binOp.rhs->value;

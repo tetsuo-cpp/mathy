@@ -17,6 +17,7 @@ MATHY> var y = 3 * 2; y
 ```
 ## Dependencies
 * Catch2
+* Trompeloeil
 ## Building
 ```
 git submodule init

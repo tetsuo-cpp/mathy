@@ -90,36 +90,32 @@ TEST_CASE("parser handles addition", "[parser]") {
   testParser("1 + 2",
              {Token(TokenKind::Number, "1"), Token(TokenKind::Addition),
               Token(TokenKind::Number, "2")},
-             *std::make_unique<BinOp>(TokenKind::Addition,
-                                      std::make_unique<Number>(1),
-                                      std::make_unique<Number>(2)));
+             BinOp(TokenKind::Addition, std::make_unique<Number>(1),
+                   std::make_unique<Number>(2)));
 }
 
 TEST_CASE("parser handles subtraction", "[parser]") {
   testParser("8 - 1",
              {Token(TokenKind::Number, "8"), Token(TokenKind::Subtraction),
               Token(TokenKind::Number, "1")},
-             *std::make_unique<BinOp>(TokenKind::Subtraction,
-                                      std::make_unique<Number>(8),
-                                      std::make_unique<Number>(1)));
+             BinOp(TokenKind::Subtraction, std::make_unique<Number>(8),
+                   std::make_unique<Number>(1)));
 }
 
 TEST_CASE("parser handles multiplication", "[parser]") {
   testParser("2 * 5",
              {Token(TokenKind::Number, "2"), Token(TokenKind::Multiplication),
               Token(TokenKind::Number, "5")},
-             *std::make_unique<BinOp>(TokenKind::Multiplication,
-                                      std::make_unique<Number>(2),
-                                      std::make_unique<Number>(5)));
+             BinOp(TokenKind::Multiplication, std::make_unique<Number>(2),
+                   std::make_unique<Number>(5)));
 }
 
 TEST_CASE("parser handles division", "[parser]") {
   testParser("6 / 3",
              {Token(TokenKind::Number, "6"), Token(TokenKind::Division),
               Token(TokenKind::Number, "3")},
-             *std::make_unique<BinOp>(TokenKind::Division,
-                                      std::make_unique<Number>(6),
-                                      std::make_unique<Number>(3)));
+             BinOp(TokenKind::Division, std::make_unique<Number>(6),
+                   std::make_unique<Number>(3)));
 }
 
 TEST_CASE("parser handles precedence", "[parser]") {
@@ -129,37 +125,35 @@ TEST_CASE("parser handles precedence", "[parser]") {
               Token(TokenKind::Number, "1"), Token(TokenKind::Division),
               Token(TokenKind::Number, "2"), Token(TokenKind::Addition),
               Token(TokenKind::Number, "3")},
-             *std::make_unique<BinOp>(
-                 TokenKind::Addition,
-                 std::make_unique<BinOp>(
-                     TokenKind::Addition, std::make_unique<Number>(3),
-                     std::make_unique<BinOp>(
-                         TokenKind::Division,
-                         std::make_unique<BinOp>(TokenKind::Multiplication,
-                                                 std::make_unique<Number>(2),
-                                                 std::make_unique<Number>(1)),
-                         std::make_unique<Number>(2))),
-                 std::make_unique<Number>(3)));
+             BinOp(TokenKind::Addition,
+                   std::make_unique<BinOp>(
+                       TokenKind::Addition, std::make_unique<Number>(3),
+                       std::make_unique<BinOp>(
+                           TokenKind::Division,
+                           std::make_unique<BinOp>(TokenKind::Multiplication,
+                                                   std::make_unique<Number>(2),
+                                                   std::make_unique<Number>(1)),
+                           std::make_unique<Number>(2))),
+                   std::make_unique<Number>(3)));
 }
 
 TEST_CASE("parser handles var decls", "[parser]") {
-  testParser("var foo = 1 + 2",
-             {Token(TokenKind::Var), Token(TokenKind::Identifier, "foo"),
-              Token(TokenKind::Assignment), Token(TokenKind::Number, "1"),
-              Token(TokenKind::Addition), Token(TokenKind::Number, "2")},
-             *std::make_unique<VarDecl>(
-                 "foo", std::make_unique<BinOp>(TokenKind::Addition,
-                                                std::make_unique<Number>(1),
-                                                std::make_unique<Number>(2))));
+  testParser(
+      "var foo = 1 + 2",
+      {Token(TokenKind::Var), Token(TokenKind::Identifier, "foo"),
+       Token(TokenKind::Assignment), Token(TokenKind::Number, "1"),
+       Token(TokenKind::Addition), Token(TokenKind::Number, "2")},
+      VarDecl("foo", std::make_unique<BinOp>(TokenKind::Addition,
+                                             std::make_unique<Number>(1),
+                                             std::make_unique<Number>(2))));
 }
 
 TEST_CASE("parser handles identifiers", "[parser]") {
   testParser("1 + bar",
              {Token(TokenKind::Number, "1"), Token(TokenKind::Addition),
               Token(TokenKind::Identifier, "bar")},
-             *std::make_unique<BinOp>(TokenKind::Addition,
-                                      std::make_unique<Number>(1),
-                                      std::make_unique<VarRef>("bar")));
+             BinOp(TokenKind::Addition, std::make_unique<Number>(1),
+                   std::make_unique<VarRef>("bar")));
 }
 
 } // namespace mathy::test

@@ -54,6 +54,11 @@ std::unique_ptr<IAst> Parser::parseMultiplication() {
 }
 
 std::unique_ptr<IAst> Parser::parsePrimaryExpr() {
+  if (checkToken(TokenKind::OpenParen)) {
+    auto innerExpr = parseExpr();
+    expectToken(TokenKind::CloseParen);
+    return innerExpr;
+  }
   const auto prevTok = curTok;
   if (checkToken(TokenKind::Number)) {
     const int intValue = std::stoi(prevTok.value);

@@ -137,6 +137,18 @@ TEST_CASE("parser handles precedence", "[parser]") {
                    std::make_unique<Number>(3)));
 }
 
+TEST_CASE("parser handles parens", "[parser]") {
+  testParser("3 * (2 + 1)",
+             {Token(TokenKind::Number, "3"), Token(TokenKind::Multiplication),
+              Token(TokenKind::OpenParen), Token(TokenKind::Number, "2"),
+              Token(TokenKind::Addition), Token(TokenKind::Number, "1"),
+              Token(TokenKind::CloseParen)},
+             BinOp(TokenKind::Multiplication, std::make_unique<Number>(3),
+                   std::make_unique<BinOp>(TokenKind::Addition,
+                                           std::make_unique<Number>(2),
+                                           std::make_unique<Number>(1))));
+}
+
 TEST_CASE("parser handles var decls", "[parser]") {
   testParser(
       "var foo = 1 + 2",

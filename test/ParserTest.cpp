@@ -11,8 +11,8 @@ namespace {
 
 class ScriptedLexer : public ILexer {
 public:
-  explicit ScriptedLexer(std::vector<Token> &&tokens)
-      : tokens(std::move(tokens)), pos(0) {}
+  explicit ScriptedLexer(const std::vector<Token> &tokens)
+      : tokens(tokens), pos(0) {}
   virtual ~ScriptedLexer() = default;
   // ILexer impl.
   Token lex() override {
@@ -22,8 +22,13 @@ public:
   }
 
 private:
-  const std::vector<Token> tokens;
+  const std::vector<Token> &tokens;
   size_t pos;
+};
+
+class MockLexer : public ILexer {
+public:
+  MAKE_MOCK0(lex, Token(), override);
 };
 
 void compare(const IAst &lhs, const IAst &rhs);
@@ -66,9 +71,23 @@ void compare(const IAst &lhs, const IAst &rhs) {
   REQUIRE(false);
 }
 
-void testWithScriptedLexer(std::vector<Token> &&tokens, const IAst &expected) {
-  ScriptedLexer lexer(std::move(tokens));
+void testWithScriptedLexer(const std::vector<Token> &tokens,
+                           const IAst &expected) {
+  ScriptedLexer lexer(tokens);
   Parser parser(lexer);
+  compare(expected, *parser.parse());
+}
+
+void testWithMockLexer(const std::vector<Token> &tokens, const IAst &expected) {
+  trompeloeil::sequence seq;
+  MockLexer lexer;
+  Parser parser(lexer);
+  for (size_t i = 0; i < tokens.size(); ++i)
+    REQUIRE_CALL(lexer, lex()).RETURN(tokens.at(i)).IN_SEQUENCE(seq).TIMES(1);
+  REQUIRE_CALL(lexer, lex())
+      .RETURN(Token(TokenKind::EndOfFile))
+      .IN_SEQUENCE(seq)
+      .TIMES(1);
   compare(expected, *parser.parse());
 }
 
@@ -78,9 +97,11 @@ void testWithLexer(const std::string &source, const IAst &expected) {
   compare(expected, *parser.parse());
 }
 
-void testParser(const std::string &source, std::vector<Token> &&scriptedTokens,
+void testParser(const std::string &source,
+                const std::vector<Token> &scriptedTokens,
                 const IAst &expected) {
-  testWithScriptedLexer(std::move(scriptedTokens), expected);
+  testWithScriptedLexer(scriptedTokens, expected);
+  testWithMockLexer(scriptedTokens, expected);
   testWithLexer(source, expected);
 }
 

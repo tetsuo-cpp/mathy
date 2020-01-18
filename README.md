@@ -1,5 +1,7 @@
 # Mathy
 A toy programming language that supports basic integer arithmetic.
+
+This project was mainly an excuse for me to learn about some testing libraries in the C++ ecosystem that I hadn't gotten the chance to try yet (Catch2 and Trompeloeil).
 ## Syntax
 ```
 MATHY> var x = 1 + 3
